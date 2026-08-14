@@ -3,6 +3,7 @@
 const TOOLS = [
   { key: 'c2', label: 'C2 · Statistics', href: 'https://statistics.evidencia.ai' },
   { key: 'c3', label: 'C3 · Sample Size', href: 'https://sampsize.evidencia.ai' },
+  { key: 'c4', label: 'C4 · Writing', href: 'https://writing.evidencia.ai' },
   { key: 'c5', label: 'C5 · Meta-Analysis', href: 'https://meta-analysis.io', external: true },
 ];
 
