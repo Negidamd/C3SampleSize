@@ -179,12 +179,12 @@ function Scenario1() {
       bookRef="Handbook p.32-36"
     >
       <FormulaBox
-        formula={"n = Z\u00B2\u00B7p\u00B7(1\u2212p) / d\u00B2\nWith FPC: n_adj = n / (1 + (n\u22121)/N)"}
+        formula={"n = Z²·p·(1−p) / d²\nWith FPC: n_adj = n / (1 + (n−1)/N)"}
         reference="Negida Handbook Part IV, p.34"
       />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <InputField label="Expected prevalence (p)" value={p} onChange={setP} hint="e.g. 0.151 for 15.1%" step="0.01" min="0" max="1" />
-        <InputField label="Margin of error (d)" value={d} onChange={setD} hint="e.g. 0.05 for \u00B15%" step="0.01" />
+        <InputField label="Margin of error (d)" value={d} onChange={setD} hint="e.g. 0.05 for ±5%" step="0.01" />
         <SelectField label="Confidence level" value={ci} onChange={setCI} options={[
           { value: "0.90", label: "90% (Z=1.645)" },
           { value: "0.95", label: "95% (Z=1.960)" },
@@ -257,7 +257,7 @@ function Scenario2() {
       bookRef="Handbook p.37-41"
     >
       <FormulaBox
-        formula={"n = [Z_{\u03B1/2}\u00B7\u221A((1+1/r)\u00B7P\u0304(1\u2212P\u0304)) + Z_\u03B2\u00B7\u221A(P\u2081(1\u2212P\u2081)+P\u2080(1\u2212P\u2080)/r)]\u00B2\n    / (P\u2081\u2212P\u2080)\u00B2"}
+        formula={"n = [Z_{α/2}·√((1+1/r)·P̄(1−P̄)) + Z_β·√(P₁(1−P₁)+P₀(1−P₀)/r)]²\n    / (P₁−P₀)²"}
         reference="Negida Handbook Part IV, p.40"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -276,10 +276,10 @@ function Scenario2() {
         </div>
       )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-        <SelectField label="Power (1\u2212\u03B2)" value={power} onChange={setPower} options={[
+        <SelectField label="Power (1−β)" value={power} onChange={setPower} options={[
           { value: "0.80", label: "80%" }, { value: "0.85", label: "85%" }, { value: "0.90", label: "90%" },
         ]} />
-        <SelectField label="Alpha (\u03B1)" value={alpha} onChange={setAlpha} options={[
+        <SelectField label="Alpha (α)" value={alpha} onChange={setAlpha} options={[
           { value: "0.05", label: "5% (two-sided)" }, { value: "0.01", label: "1% (two-sided)" },
         ]} />
         <InputField label="Controls per case" value={ratio} onChange={setRatio} min="1" max="4" hint="1-4" />
@@ -288,7 +288,7 @@ function Scenario2() {
         <ResultBox
           label="Required Sample Size"
           value={res.total}
-          detail={`${res.n_cases} cases + ${res.n_controls} controls${res.p1_calc ? ` (computed P\u2081 from OR = ${res.p1_calc.toFixed(4)})` : ""}`}
+          detail={`${res.n_cases} cases + ${res.n_controls} controls${res.p1_calc ? ` (computed P₁ from OR = ${res.p1_calc.toFixed(4)})` : ""}`}
         />
       )}
     </Card>
@@ -335,12 +335,12 @@ function Scenario3() {
   const res = calculate();
   return (
     <Card
-      title="Scenario 3: Comparing Two Proportions (Cohort / Clinical Trial \u2013 Binary Outcome)"
+      title="Scenario 3: Comparing Two Proportions (Cohort / Clinical Trial – Binary Outcome)"
       subtitle="Use for any study where the outcome is two proportions compared in the form of Risk Ratio (RR). Suitable for cohort studies and clinical trials with binary outcomes."
       bookRef="Handbook p.42-44"
     >
       <FormulaBox
-        formula={"p\u0304 = (p\u2081 + r\u00B7p\u2082)/(1+r)\nn \u2265 [Z_{\u03B1/2}\u00B7\u221A((r+1)\u00B7p\u0304(1\u2212p\u0304)) + Z_\u03B2\u00B7\u221A(p\u2081(1\u2212p\u2081)+p\u2082(1\u2212p\u2082)/r)]\u00B2\n    / r\u00B7(p\u2082\u2212p\u2081)\u00B2"}
+        formula={"p̄ = (p₁ + r·p₂)/(1+r)\nn ≥ [Z_{α/2}·√((r+1)·p̄(1−p̄)) + Z_β·√(p₁(1−p₁)+p₂(1−p₂)/r)]²\n    / r·(p₂−p₁)²"}
         reference="Negida Handbook Part IV, p.44 (SampSize App formula)"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -411,11 +411,11 @@ function Scenario4() {
   return (
     <Card
       title="Scenario 4: Matched Case-Control Studies"
-      subtitle="Use for matched case-control studies. Requirements are the same as independent case-control + the correlation coefficient (\u03C6) for exposure between matched cases and controls."
+      subtitle="Use for matched case-control studies. Requirements are the same as independent case-control + the correlation coefficient (φ) for exposure between matched cases and controls."
       bookRef="Handbook p.45-47"
     >
       <FormulaBox
-        formula={"Step 1: n_independent = Independent case-control formula (Scenario 2)\nStep 2: n_matched = \u2308 n_independent / (1 \u2212 \u03C6) \u2309\nDesign effect: matching reduces the effective sample by factor (1\u2212\u03C6).\nIf unable to estimate \u03C6, assume \u03C6 = 0.2"}
+        formula={"Step 1: n_independent = Independent case-control formula (Scenario 2)\nStep 2: n_matched = ⌈ n_independent / (1 − φ) ⌉\nDesign effect: matching reduces the effective sample by factor (1−φ).\nIf unable to estimate φ, assume φ = 0.2"}
         reference="Negida Handbook Part IV, p.47 (StatsDirect: matched case-control)"
       />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -423,7 +423,7 @@ function Scenario4() {
         <InputField label="P(exposure) in controls" value={pControls} onChange={setPControls} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
-        <InputField label="Correlation (\u03C6)" value={phi} onChange={setPhi} hint="Default: 0.2" />
+        <InputField label="Correlation (φ)" value={phi} onChange={setPhi} hint="Default: 0.2" />
         <SelectField label="Power" value={power} onChange={setPower} options={[
           { value: "0.80", label: "80%" }, { value: "0.85", label: "85%" }, { value: "0.90", label: "90%" },
         ]} />
@@ -436,7 +436,7 @@ function Scenario4() {
         <ResultBox
           label="Estimated Minimum Sample Size (cases required)"
           value={res.n_cases}
-          detail={`${res.n_cases} cases + ${res.n_controls} controls = ${res.total} total (P\u2081=${res.p1.toFixed(4)}, n_independent=${res.n_ind})`}
+          detail={`${res.n_cases} cases + ${res.n_controls} controls = ${res.total} total (P₁=${res.p1.toFixed(4)}, n_independent=${res.n_ind})`}
         />
       )}
     </Card>
@@ -472,11 +472,11 @@ function Scenario5() {
   return (
     <Card
       title="Scenario 5: Paired Cohort Studies"
-      subtitle="Use for matched/paired cohort studies. Same requirements as independent cohort + the correlation coefficient (\u03C6) for events between matched subjects."
+      subtitle="Use for matched/paired cohort studies. Same requirements as independent cohort + the correlation coefficient (φ) for events between matched subjects."
       bookRef="Handbook p.48-49"
     >
       <FormulaBox
-        formula={"Step 1: n_independent = Independent two-proportions formula (Scenario 3, r=1)\nStep 2: n_pairs = \u2308 n_independent / (1 \u2212 \u03C6) \u2309\nDesign effect: pairing reduces effective sample by factor (1\u2212\u03C6).\nIf unable to estimate \u03C6, assume 0.2 as minimum meaningful correlation."}
+        formula={"Step 1: n_independent = Independent two-proportions formula (Scenario 3, r=1)\nStep 2: n_pairs = ⌈ n_independent / (1 − φ) ⌉\nDesign effect: pairing reduces effective sample by factor (1−φ).\nIf unable to estimate φ, assume 0.2 as minimum meaningful correlation."}
         reference="Negida Handbook Part IV, p.49 (StatsDirect: paired cohort study)"
       />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -484,7 +484,7 @@ function Scenario5() {
         <InputField label="Event rate in control group" value={pControl} onChange={setPControl} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-        <InputField label="Correlation (\u03C6)" value={phi} onChange={setPhi} hint="Default: 0.2" />
+        <InputField label="Correlation (φ)" value={phi} onChange={setPhi} hint="Default: 0.2" />
         <SelectField label="Power" value={power} onChange={setPower} options={[
           { value: "0.80", label: "80%" }, { value: "0.85", label: "85%" }, { value: "0.90", label: "90%" },
         ]} />
@@ -492,7 +492,7 @@ function Scenario5() {
           { value: "0.05", label: "5%" }, { value: "0.01", label: "1%" },
         ]} />
       </div>
-      {res && <ResultBox label="Required Sample Size" value={`${res.n_pairs} pairs`} detail={`n_independent = ${res.n_ind} per group, adjusted for pairing (\u03C6)`} />}
+      {res && <ResultBox label="Required Sample Size" value={`${res.n_pairs} pairs`} detail={`n_independent = ${res.n_ind} per group, adjusted for pairing (φ)`} />}
     </Card>
   );
 }
@@ -555,7 +555,7 @@ function Scenario6() {
       bookRef="Handbook p.50-52"
     >
       <FormulaBox
-        formula={"n_event \u2265 2\u00B7(Z_{\u03B1/2} + Z_{1\u2212\u03B2})\u00B2 / (log_e HR)\u00B2"}
+        formula={"n_event ≥ 2·(Z_{α/2} + Z_{1−β})² / (log_e HR)²"}
         reference="Negida Handbook Part IV, p.52 (SampSize App formula)"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -564,8 +564,8 @@ function Scenario6() {
       </div>
       {inputMode === "medians" ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          <InputField label="Median survival \u2013 experimental" value={medExp} onChange={setMedExp} unit="months" />
-          <InputField label="Median survival \u2013 control" value={medCtrl} onChange={setMedCtrl} unit="months" />
+          <InputField label="Median survival – experimental" value={medExp} onChange={setMedExp} unit="months" />
+          <InputField label="Median survival – control" value={medCtrl} onChange={setMedCtrl} unit="months" />
         </div>
       ) : (
         <InputField label="Expected Hazard Ratio (HR)" value={hr} onChange={setHR} />
@@ -585,7 +585,7 @@ function Scenario6() {
         <ResultBox
           label="Required Number of Events"
           value={res.n_events}
-          detail={`HR = ${res.HR} | ~${res.n_per_group} per group (${res.total} total)${res.p_event_avg ? ` | P(event) \u2248 ${(res.p_event_avg * 100).toFixed(1)}%` : ""}`}
+          detail={`HR = ${res.HR} | ~${res.n_per_group} per group (${res.total} total)${res.p_event_avg ? ` | P(event) ≈ ${(res.p_event_avg * 100).toFixed(1)}%` : ""}`}
         />
       )}
     </Card>
@@ -622,12 +622,12 @@ function Scenario7() {
       bookRef="Handbook p.53-54"
     >
       <FormulaBox
-        formula={"n \u2265 ((Z_{\u03B1/2} + Z_{1\u2212\u03B2}) / (\u00BD\u00B7ln((1+r)/(1\u2212r))))\u00B2 + 3"}
+        formula={"n ≥ ((Z_{α/2} + Z_{1−β}) / (½·ln((1+r)/(1−r))))² + 3"}
         reference="Negida Handbook Part IV, p.54 (SampSize App formula)"
       />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <InputField label="Expected correlation (r) \u2013 alternative hypothesis" value={r} onChange={setR} hint="e.g. 0.46" min="-0.99" max="0.99" />
-        <InputField label="Correlation under null hypothesis (r\u2080)" value={r0} onChange={setR0} hint="Usually 0" min="-0.99" max="0.99" />
+        <InputField label="Expected correlation (r) – alternative hypothesis" value={r} onChange={setR} hint="e.g. 0.46" min="-0.99" max="0.99" />
+        <InputField label="Correlation under null hypothesis (r₀)" value={r0} onChange={setR0} hint="Usually 0" min="-0.99" max="0.99" />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <SelectField label="Power" value={power} onChange={setPower} options={[
@@ -707,7 +707,7 @@ function Scenario8() {
       bookRef="Handbook p.55-58"
     >
       <FormulaBox
-        formula={"Continuous: n \u2265 (Z_{\u03B1/2}+Z_\u03B2)\u00B2\u00B7(\u03C3\u2081\u00B2+\u03C3\u2082\u00B2/r) / (\u03BC\u2081\u2212\u03BC\u2082)\u00B2\nBy effect size: n \u2265 ((1+r)/r)\u00B7((Z_{\u03B1/2}+Z_\u03B2)/d)\u00B2 + Z\u00B2_{\u03B1/2}/(2(1+r))\nBinary: same as Scenario 3 formula"}
+        formula={"Continuous: n ≥ (Z_{α/2}+Z_β)²·(σ₁²+σ₂²/r) / (μ₁−μ₂)²\nBy effect size: n ≥ ((1+r)/r)·((Z_{α/2}+Z_β)/d)² + Z²_{α/2}/(2(1+r))\nBinary: same as Scenario 3 formula"}
         reference="Negida Handbook Part IV, p.57-58"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
@@ -717,10 +717,10 @@ function Scenario8() {
       </div>
       {outcomeType === "continuous_means" && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          <InputField label="Mean in group 1 (\u03BC\u2081)" value={mean1} onChange={setMean1} />
-          <InputField label="Mean in group 2 (\u03BC\u2082)" value={mean2} onChange={setMean2} />
-          <InputField label="SD in group 1 (\u03C3\u2081)" value={sd1} onChange={setSD1} />
-          <InputField label="SD in group 2 (\u03C3\u2082)" value={sd2} onChange={setSD2} />
+          <InputField label="Mean in group 1 (μ₁)" value={mean1} onChange={setMean1} />
+          <InputField label="Mean in group 2 (μ₂)" value={mean2} onChange={setMean2} />
+          <InputField label="SD in group 1 (σ₁)" value={sd1} onChange={setSD1} />
+          <InputField label="SD in group 2 (σ₂)" value={sd2} onChange={setSD2} />
         </div>
       )}
       {outcomeType === "continuous_effect" && (
@@ -728,8 +728,8 @@ function Scenario8() {
       )}
       {outcomeType === "binary" && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          <InputField label="Proportion in group 1 (p\u2081)" value={p1} onChange={setP1} />
-          <InputField label="Proportion in group 2 (p\u2082)" value={p2} onChange={setP2} />
+          <InputField label="Proportion in group 1 (p₁)" value={p1} onChange={setP1} />
+          <InputField label="Proportion in group 2 (p₂)" value={p2} onChange={setP2} />
         </div>
       )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
@@ -809,7 +809,7 @@ function Scenario9() {
       bookRef="Handbook p.59-60"
     >
       <FormulaBox
-        formula={"Binary: n \u2265 (Z_\u03B1 + Z_\u03B2)\u00B2\u00B7(p\u2081(1\u2212p\u2081)+p\u2082(1\u2212p\u2082)/r) / (margin\u2212|\u03B4|)\u00B2\nContinuous: n \u2265 (Z_\u03B1 + Z_\u03B2)\u00B2\u00B7\u03C3\u00B2\u00B7(1+1/r) / (margin\u2212|\u03B4|)\u00B2\nwhere \u03B4 = p\u2081\u2212p\u2082 (or mean difference). Uses ONE-SIDED alpha."}
+        formula={"Binary: n ≥ (Z_α + Z_β)²·(p₁(1−p₁)+p₂(1−p₂)/r) / (margin−|δ|)²\nContinuous: n ≥ (Z_α + Z_β)²·σ²·(1+1/r) / (margin−|δ|)²\nwhere δ = p₁−p₂ (or mean difference). Uses ONE-SIDED alpha."}
         reference="Negida Handbook Part IV, p.60"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -818,14 +818,14 @@ function Scenario9() {
       </div>
       {outcomeType === "binary" ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-          <InputField label="Rate in treatment A (p\u2081)" value={p1} onChange={setP1} />
-          <InputField label="Rate in treatment B (p\u2082)" value={p2} onChange={setP2} />
+          <InputField label="Rate in treatment A (p₁)" value={p1} onChange={setP1} />
+          <InputField label="Rate in treatment B (p₂)" value={p2} onChange={setP2} />
           <InputField label="NI margin" value={margin} onChange={setMargin} hint="e.g. 0.20 for 20%" />
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
           <InputField label="Expected mean difference" value={meanDiff} onChange={setMeanDiff} hint="Can be 0" />
-          <InputField label="Population SD (\u03C3)" value={sd} onChange={setSD} />
+          <InputField label="Population SD (σ)" value={sd} onChange={setSD} />
           <InputField label="NI margin" value={margin} onChange={setMargin} />
         </div>
       )}
@@ -898,11 +898,11 @@ function Scenario10() {
   return (
     <Card
       title="Scenario 10: Equivalence Trials"
-      subtitle="Use for equivalence clinical trials. The hypothesis is that the difference between two treatments falls within the equivalence margin (\u2212\u0394, +\u0394)."
+      subtitle="Use for equivalence clinical trials. The hypothesis is that the difference between two treatments falls within the equivalence margin (−Δ, +Δ)."
       bookRef="Handbook p.61"
     >
       <FormulaBox
-        formula={"Continuous: n \u2265 (Z_{\u03B1/2}+Z_\u03B2)\u00B2\u00B7\u03C3\u00B2\u00B7(1+1/r) / (\u0394\u2212|\u03B4|)\u00B2\nBinary: n \u2265 (Z_{\u03B1/2}+Z_\u03B2)\u00B2\u00B7(p\u2081(1\u2212p\u2081)+p\u2082(1\u2212p\u2082)/r) / (\u0394\u2212|p\u2081\u2212p\u2082|)\u00B2"}
+        formula={"Continuous: n ≥ (Z_{α/2}+Z_β)²·σ²·(1+1/r) / (Δ−|δ|)²\nBinary: n ≥ (Z_{α/2}+Z_β)²·(p₁(1−p₁)+p₂(1−p₂)/r) / (Δ−|p₁−p₂|)²"}
         reference="Negida Handbook Part IV, p.61"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -911,15 +911,15 @@ function Scenario10() {
       </div>
       {outcomeType === "continuous" ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-          <InputField label="Expected mean diff (\u03B4)" value={meanDiff} onChange={setMeanDiff} hint="Often 0" />
-          <InputField label="Population SD (\u03C3)" value={sd} onChange={setSD} />
-          <InputField label="Equivalence margin (\u0394)" value={margin} onChange={setMargin} />
+          <InputField label="Expected mean diff (δ)" value={meanDiff} onChange={setMeanDiff} hint="Often 0" />
+          <InputField label="Population SD (σ)" value={sd} onChange={setSD} />
+          <InputField label="Equivalence margin (Δ)" value={margin} onChange={setMargin} />
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
           <InputField label="Proportion group 1" value={p1} onChange={setP1} />
           <InputField label="Proportion group 2" value={p2} onChange={setP2} />
-          <InputField label="Equivalence margin (\u0394)" value={margin} onChange={setMargin} />
+          <InputField label="Equivalence margin (Δ)" value={margin} onChange={setMargin} />
         </div>
       )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
@@ -965,9 +965,9 @@ function SS1() {
   const res = calculate();
   return (
     <Card title="SS1: Sample Size for a Single Mean" subtitle="For studies estimating the mean value of an outcome measure (cross-sectional, descriptive cohort, single-arm trial)." bookRef="Handbook p.66">
-      <FormulaBox formula={"n \u2265 (Z_{\u03B1/2}\u00B7\u03C3 / d)\u00B2"} reference="Negida Handbook Part IV, p.66" />
+      <FormulaBox formula={"n ≥ (Z_{α/2}·σ / d)²"} reference="Negida Handbook Part IV, p.66" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-        <InputField label="Expected SD (\u03C3)" value={sd} onChange={setSD} />
+        <InputField label="Expected SD (σ)" value={sd} onChange={setSD} />
         <InputField label="Margin of error (d)" value={d} onChange={setD} />
         <SelectField label="Alpha" value={alpha} onChange={setAlpha} options={[
           { value: "0.05", label: "5%" }, { value: "0.01", label: "1%" },
@@ -996,11 +996,11 @@ function SS2() {
 
   const res = calculate();
   return (
-    <Card title="SS2: Single Arm Pre/Post \u2013 Continuous Outcome" subtitle="For single-arm studies comparing before vs. after with a continuous measure (e.g., BMI change, HBA1C change)." bookRef="Handbook p.67">
-      <FormulaBox formula={"n \u2265 2\u00B7(Z_{\u03B1/2}+Z_\u03B2)\u00B2 / (\u03B4_diff/\u03C3_diff)\u00B2 + Z\u00B2_{\u03B1/2}/2"} reference="Negida Handbook Part IV, p.67" />
+    <Card title="SS2: Single Arm Pre/Post – Continuous Outcome" subtitle="For single-arm studies comparing before vs. after with a continuous measure (e.g., BMI change, HBA1C change)." bookRef="Handbook p.67">
+      <FormulaBox formula={"n ≥ 2·(Z_{α/2}+Z_β)² / (δ_diff/σ_diff)² + Z²_{α/2}/2"} reference="Negida Handbook Part IV, p.67" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <InputField label="Mean of difference (\u03B4Diff)" value={meanDiff} onChange={setMeanDiff} />
-        <InputField label="SD of difference (\u03C3Diff)" value={sdDiff} onChange={setSDDiff} />
+        <InputField label="Mean of difference (δDiff)" value={meanDiff} onChange={setMeanDiff} />
+        <InputField label="SD of difference (σDiff)" value={sdDiff} onChange={setSDDiff} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <SelectField label="Power" value={power} onChange={setPower} options={[
@@ -1037,11 +1037,11 @@ function SS3() {
 
   const res = calculate();
   return (
-    <Card title="SS3: Single Arm Pre/Post \u2013 Categorical Outcome" subtitle="For single-arm pre/post studies with a categorical/binary outcome (e.g., awareness before vs. after education program)." bookRef="Handbook p.68">
-      <FormulaBox formula={"\u03C6 = \u03C0A(1\u2212\u03C0B)/(\u03C0B(1\u2212\u03C0A))\n\u03C0_disc = \u03C0A(1\u2212\u03C0B)+\u03C0B(1\u2212\u03C0A)\nn_pair \u2265 [Z_{\u03B1/2}(\u03C6+1)+Z_\u03B2\u221A((\u03C6+1)\u00B2\u2212(\u03C6\u22121)\u00B2\u00B7\u03C0_disc)]\u00B2/((\u03C6\u22121)\u00B2\u00B7\u03C0_disc)"} reference="Negida Handbook Part IV, p.68" />
+    <Card title="SS3: Single Arm Pre/Post – Categorical Outcome" subtitle="For single-arm pre/post studies with a categorical/binary outcome (e.g., awareness before vs. after education program)." bookRef="Handbook p.68">
+      <FormulaBox formula={"φ = πA(1−πB)/(πB(1−πA))\nπ_disc = πA(1−πB)+πB(1−πA)\nn_pair ≥ [Z_{α/2}(φ+1)+Z_β√((φ+1)²−(φ−1)²·π_disc)]²/((φ−1)²·π_disc)"} reference="Negida Handbook Part IV, p.68" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <InputField label="Proportion before (\u03C0A)" value={pBefore} onChange={setPBefore} />
-        <InputField label="Proportion after (\u03C0B)" value={pAfter} onChange={setPAfter} />
+        <InputField label="Proportion before (πA)" value={pBefore} onChange={setPBefore} />
+        <InputField label="Proportion after (πB)" value={pAfter} onChange={setPAfter} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <SelectField label="Power" value={power} onChange={setPower} options={[
@@ -1058,7 +1058,7 @@ function SS3() {
 
 function SS4() {
   return (
-    <Card title="SS4: Mean Difference Comparing 3 Groups" subtitle="Two approaches: (1) Multiple pairwise comparisons \u2013 take the largest n. (2) Use ANOVA-based calculation from SS5." bookRef="Handbook p.69-70">
+    <Card title="SS4: Mean Difference Comparing 3 Groups" subtitle="Two approaches: (1) Multiple pairwise comparisons – take the largest n. (2) Use ANOVA-based calculation from SS5." bookRef="Handbook p.69-70">
       <div style={{ background: colors.infoBg, padding: 16, borderRadius: 8, fontSize: 13, lineHeight: 1.6 }}>
         <p style={{ margin: "0 0 12px", fontWeight: 600, color: colors.info }}>Method 1: Pairwise Comparisons</p>
         <p style={{ margin: 0 }}>
@@ -1095,7 +1095,7 @@ function SS5() {
   const res = calculate();
   return (
     <Card title="SS5: Mean Difference Comparing >2 Groups" subtitle="For studies comparing continuous outcomes across more than 2 groups using ANOVA-based effect size." bookRef="Handbook p.71">
-      <FormulaBox formula={"n \u2265 (1+\u221A(g\u22121))\u00B7(Z_{\u03B1/2}+Z_\u03B2)\u00B2/d\u00B2 + Z\u00B2_{\u03B1/2}\u00B7\u221A(g\u22121)/(2(1+\u221A(g\u22121)))"} reference="Negida Handbook Part IV, p.71 (SampSize App)" />
+      <FormulaBox formula={"n ≥ (1+√(g−1))·(Z_{α/2}+Z_β)²/d² + Z²_{α/2}·√(g−1)/(2(1+√(g−1)))"} reference="Negida Handbook Part IV, p.71 (SampSize App)" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
         <InputField label="Effect size (d)" value={effectSize} onChange={setEffectSize} hint="Small=0.2, Moderate=0.4, Large=0.6+" />
         <InputField label="Number of groups (g)" value={groups} onChange={setGroups} min="2" max="10" />
@@ -1110,7 +1110,7 @@ function SS5() {
         <ResultBox
           label="Required Sample Size"
           value={res.total}
-          detail={`${res.n_per_group} per group \u00D7 ${res.g} groups`}
+          detail={`${res.n_per_group} per group × ${res.g} groups`}
         />
       )}
     </Card>
@@ -1139,9 +1139,9 @@ function SS6() {
 
   const res = calculate();
   return (
-    <Card title="SS6: Diagnostic Test Accuracy \u2013 Sensitivity & Specificity" subtitle="For diagnostic accuracy studies based on expected sensitivity or specificity, prevalence, and desired margin of error." bookRef="Handbook p.72">
+    <Card title="SS6: Diagnostic Test Accuracy – Sensitivity & Specificity" subtitle="For diagnostic accuracy studies based on expected sensitivity or specificity, prevalence, and desired margin of error." bookRef="Handbook p.72">
       <FormulaBox
-        formula={"Sensitivity: n \u2265 Z\u00B2_{\u03B1/2}\u00B7Sens\u00B7(1\u2212Sens) / (d\u00B2\u00B7Prev)\nSpecificity: n \u2265 Z\u00B2_{\u03B1/2}\u00B7Spec\u00B7(1\u2212Spec) / (d\u00B2\u00B7(1\u2212Prev))"}
+        formula={"Sensitivity: n ≥ Z²_{α/2}·Sens·(1−Sens) / (d²·Prev)\nSpecificity: n ≥ Z²_{α/2}·Spec·(1−Spec) / (d²·(1−Prev))"}
         reference="Negida Handbook Part IV, p.72; Negida et al. Adv J Emerg Med 2019"
       />
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
@@ -1233,7 +1233,7 @@ function GuideTable() {
   ];
 
   return (
-    <Card title="Guide Table: How to Choose Your Scenario" subtitle="Based on the book's Step 4 \u2013 mapping your study characteristics to the correct scenario." bookRef="Handbook p.23">
+    <Card title="Guide Table: How to Choose Your Scenario" subtitle="Based on the book's Step 4 – mapping your study characteristics to the correct scenario." bookRef="Handbook p.23">
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
@@ -1241,7 +1241,7 @@ function GuideTable() {
               <th style={{ padding: "10px 12px", textAlign: "left" }}>Outcome Type</th>
               <th style={{ padding: "10px 12px", textAlign: "left" }}>Groups</th>
               <th style={{ padding: "10px 12px", textAlign: "left" }}>Effect Estimate</th>
-              <th style={{ padding: "10px 12px", textAlign: "left" }}>\u2192 Scenario</th>
+              <th style={{ padding: "10px 12px", textAlign: "left" }}>→ Scenario</th>
             </tr>
           </thead>
           <tbody>
@@ -1269,7 +1269,7 @@ function StepsOverview() {
     { num: 2, title: "How will the primary objective be assessed?", desc: "What is the type of outcome measure? (proportion, mean, survival, correlation)" },
     { num: 3, title: "Determine the type of effect size", desc: "OR, RR, HR, mean difference, correlation coefficient, or proportion?" },
     { num: 4, title: "Pick the right scenario", desc: "Use the Guide Table to map your outcome type, number of groups, and effect estimate to one of the 10 scenarios." },
-    { num: 5, title: "Find the missing values", desc: "Estimate effect size from literature, determine power (\u226580%), alpha (usually 0.05), and other required parameters." },
+    { num: 5, title: "Find the missing values", desc: "Estimate effect size from literature, determine power (≥80%), alpha (usually 0.05), and other required parameters." },
     { num: 6, title: "Run the calculation", desc: "Use this web app, SampSize, StatsDirect, EpiInfo, or other software." },
     { num: 7, title: "Report properly", desc: "Document the scenario, software, all input parameters, and the calculated sample size." },
   ];
@@ -1338,7 +1338,7 @@ export default function App() {
       }}>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Sample Size Calculator</h1>
         <p style={{ margin: "4px 0 0", fontSize: 13, opacity: 0.9 }}>
-          Negida Handbook of Clinical Research \u2013 Part IV | NCRT Module C3
+          Negida Handbook of Clinical Research – Part IV | NCRT Module C3
         </p>
         <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.7 }}>By Ahmed Negida, MD, PhD</p>
       </div>
@@ -1394,7 +1394,7 @@ export default function App() {
             <strong>Disclaimer:</strong> This calculator is designed as a companion educational tool for the NCRT Module C3 course.
             For final sample size calculations in research protocols, always verify results with established software
             (StatsDirect, G*Power, SampSize App, EpiInfo, MedCalc, R) and consult with a biostatistician.
-            All formulas are from the <em>Negida Handbook of Clinical Research \u2013 Part IV</em>.
+            All formulas are from the <em>Negida Handbook of Clinical Research – Part IV</em>.
           </div>
         </main>
       </div>
