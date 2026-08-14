@@ -1336,9 +1336,10 @@ export default function App() {
         background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryLight} 100%)`,
         color: "#fff", padding: "20px 24px",
       }}>
+        <p style={{ margin: "0 0 2px", fontSize: 12, fontWeight: 700, letterSpacing: "0.5px", opacity: 0.85 }}>EVIDENCIA Labs</p>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Sample Size Calculator</h1>
         <p style={{ margin: "4px 0 0", fontSize: 13, opacity: 0.9 }}>
-          Sample Size · Course 3 · An EVIDENCIA Labs tool
+          Sample Size · Course 3
         </p>
         <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.7 }}>Companion to the Negida Handbook of Clinical Research · Ahmed Negida, MD, PhD</p>
       </div>

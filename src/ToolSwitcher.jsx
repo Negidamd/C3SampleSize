@@ -21,7 +21,7 @@ const S = {
 export default function ToolSwitcher({ active }) {
   return (
     <div style={S.bar}>
-      <span style={S.brand}>EVIDENCIA Tools</span>
+      <span style={S.brand}>EVIDENCIA Labs</span>
       <nav style={S.links}>
         {TOOLS.map((t) => (
           <a key={t.key} href={t.href} style={{ ...S.link, ...(t.key === active ? S.active : {}) }}
