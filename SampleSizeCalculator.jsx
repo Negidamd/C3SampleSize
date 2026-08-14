@@ -1338,9 +1338,9 @@ export default function App() {
       }}>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Sample Size Calculator</h1>
         <p style={{ margin: "4px 0 0", fontSize: 13, opacity: 0.9 }}>
-          Negida Handbook of Clinical Research – Part IV | NCRT Module C3
+          Sample Size · Course 3 · An EVIDENCIA Labs tool
         </p>
-        <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.7 }}>By Ahmed Negida, MD, PhD</p>
+        <p style={{ margin: "2px 0 0", fontSize: 11, opacity: 0.7 }}>Companion to the Negida Handbook of Clinical Research · Ahmed Negida, MD, PhD</p>
       </div>
 
       <div style={{ display: "flex", maxWidth: 1200, margin: "0 auto" }}>
@@ -1391,7 +1391,7 @@ export default function App() {
             marginTop: 24, padding: 16, background: colors.warningBg, borderRadius: 8,
             border: `1px solid ${colors.accent}`, fontSize: 12, color: colors.text, lineHeight: 1.5,
           }}>
-            <strong>Disclaimer:</strong> This calculator is designed as a companion educational tool for the NCRT Module C3 course.
+            <strong>Disclaimer:</strong> This calculator is designed as a companion educational tool for Course 3 (Sample Size).
             For final sample size calculations in research protocols, always verify results with established software
             (StatsDirect, G*Power, SampSize App, EpiInfo, MedCalc, R) and consult with a biostatistician.
             All formulas are from the <em>Negida Handbook of Clinical Research – Part IV</em>.
